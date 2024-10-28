@@ -8,8 +8,10 @@ import VariantSection from "@/components/products/VariantSection";
 import { toast } from "react-toastify";
 import useProductData from "@/hooks/useProductData";
 import { handleDataUpload } from "@/utils/handleDataUpload";
+import UpdateProductSidebar from "@/components/products/UpdateProductSidebar";
+import axios from "axios";
 
-const ProductForm = ({ productId, initialData }) => {
+const UpdateProductForm = ({ productId, initialData }) => {
   const methods = useForm();
   const { handleSubmit, setValue, reset } = methods;
   const [featuredImage, setFeaturedImage] = useState<File | string | null>(
@@ -140,16 +142,24 @@ const ProductForm = ({ productId, initialData }) => {
       console.log(pair[0], pair[1]);
     }
     try {
-      await axiosInstance.post(`/products/${productId}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
+      toast.promise(
+        axiosInstance
+          .post(`/products/${productId}`, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then(() => {
+            setFeaturedImage(null);
+            setGalleryImages([]);
+            setRemovedImages([]);
+          }),
+        {
+          pending: "Updating product...",
+          success: "Product updated successfully!",
+          error: "Failed to update product. Please try again.",
         },
-      });
-      toast.success("Product updated successfully!");
-      //   methods.reset();
-      setFeaturedImage(null);
-      setGalleryImages([]);
-      setRemovedImages([]);
+      );
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.message ||
@@ -162,27 +172,32 @@ const ProductForm = ({ productId, initialData }) => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)} className="form-class">
-        <h1>Edit Product</h1>
-        <ProductDetailsForm categories={categories} tags={tags} />
-        <ImageUploadSection
-          onDropFeaturedImage={onDropFeaturedImage}
-          onDropGalleryImages={onDropGalleryImages}
-          featuredImage={featuredImage}
-          galleryImages={galleryImages}
-          onRemoveImage={handleRemoveImage}
-          removedImages={removedImages}
-        />
-        <ProductTypeForm />
-        <VariantSection
-          attributes={attributes}
-          handleOptionChange={handleOptionChange}
-          generatedVariants={generatedVariants}
-          setGeneratedVariants={setGeneratedVariants}
-        />
-        <button type="submit">Update Product</button>
+        <div className="grid grid-cols-12 gap-4">
+          <div className="col-span-8 rounded bg-white p-6 shadow-md dark:border-strokedark dark:bg-boxdark">
+            <h1>Edit Product</h1>
+            <ProductDetailsForm categories={categories} tags={tags} />
+            <ProductTypeForm />
+            <VariantSection
+              attributes={attributes}
+              handleOptionChange={handleOptionChange}
+              generatedVariants={generatedVariants}
+              setGeneratedVariants={setGeneratedVariants}
+            />
+          </div>
+          <UpdateProductSidebar
+            onDropFeaturedImage={onDropFeaturedImage}
+            onDropGalleryImages={onDropGalleryImages}
+            featuredImage={featuredImage}
+            galleryImages={galleryImages}
+            onRemoveImage={handleRemoveImage}
+            removedImages={removedImages}
+            categories={categories}
+            tags={tags}
+          />
+        </div>
       </form>
     </FormProvider>
   );
 };
 
-export default ProductForm;
+export default UpdateProductForm;

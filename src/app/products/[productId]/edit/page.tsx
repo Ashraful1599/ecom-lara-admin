@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import axiosInstance from "@/utils/axiosInstance";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import ProductForm from "@/components/products/ProductForm";
+import UpdateProductForm from "@/components/products/UpdateProductForm";
 import Loader from "@/components/common/Loader";
 
 const EditProductPage: React.FC = () => {
@@ -33,11 +33,11 @@ const EditProductPage: React.FC = () => {
   return (
     <DefaultLayout>
       <div>
-        {/* Render ProductForm only after productData is fully loaded */}
+        {/* Render UpdateProductForm only after productData is fully loaded */}
         {loading ? (
           <Loader />
         ) : (
-          <ProductForm
+          <UpdateProductForm
             key={productId}
             productId={productId}
             initialData={productData}

@@ -40,7 +40,7 @@ const ProductTypeForm: React.FC = () => {
   );
 
   return (
-    <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+    <div className="mb-6 grid grid-cols-1 gap-4">
       <div>
         <label className="block text-sm font-medium text-black dark:text-white">
           Product Type*
@@ -57,21 +57,21 @@ const ProductTypeForm: React.FC = () => {
         />
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-black dark:text-white">
-          Product Status*
-        </label>
-        <Select
-          options={productStatusOptions}
-          className="mt-1"
-          classNamePrefix="react-select"
-          placeholder="Select product status"
-          value={selectedProductStatus || null}
-          onChange={(selectedOption) => {
-            setValue("productStatus", selectedOption?.value);
-          }}
-        />
-      </div>
+      {/*<div>*/}
+      {/*  <label className="block text-sm font-medium text-black dark:text-white">*/}
+      {/*    Product Status**/}
+      {/*  </label>*/}
+      {/*  <Select*/}
+      {/*    options={productStatusOptions}*/}
+      {/*    className="mt-1"*/}
+      {/*    classNamePrefix="react-select"*/}
+      {/*    placeholder="Select product status"*/}
+      {/*    value={selectedProductStatus || null}*/}
+      {/*    onChange={(selectedOption) => {*/}
+      {/*      setValue("productStatus", selectedOption?.value);*/}
+      {/*    }}*/}
+      {/*  />*/}
+      {/*</div>*/}
     </div>
   );
 };

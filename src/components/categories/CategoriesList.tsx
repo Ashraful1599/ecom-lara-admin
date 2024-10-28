@@ -3,7 +3,6 @@ import { RootState, useAppDispatch } from "@/store/store";
 import { useSelector } from "react-redux";
 import { fetchCategories } from "@/slice/categoriesSlice"; // Adjust the import path as necessary
 import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 
 const CategoryList: React.FC = () => {
   const dispatch = useAppDispatch();

@@ -10,41 +10,38 @@ const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
 });
 
-const ProductDetailsForm: React.FC<{ categories: any[]; tags: any[] }> = ({
-  categories,
-  tags,
-}) => {
+const ProductDetailsForm: React.FC<{ categories: any[]; tags: any[] }> = () => {
   const { register, setValue, control } = useFormContext();
 
-  // Watch categories in form state, defaulting to an empty array if undefined
-  const dbCategories = useWatch({
-    control,
-    name: "categories",
-    defaultValue: [],
-  });
-  const dbTags = useWatch({
-    control,
-    name: "tags",
-    defaultValue: [],
-  });
-
-  // Transform categories and tags into options format
-  const categoryOptions = categories.map((category) => ({
-    value: category.id,
-    label: category.name,
-  }));
-  const tagOptions = tags.map((tag) => ({
-    value: tag.id,
-    label: tag.name,
-  }));
-
-  // Map selected category IDs back to their corresponding options
-  const selectedCategoryOptions = categoryOptions.filter((option) =>
-    dbCategories.map((category) => category.value).includes(option.value),
-  );
-  const selectedTagOptions = tagOptions.filter((option) =>
-    dbTags.map((tag) => tag.value).includes(option.value),
-  );
+  // // Watch categories in form state, defaulting to an empty array if undefined
+  // const dbCategories = useWatch({
+  //   control,
+  //   name: "categories",
+  //   defaultValue: [],
+  // });
+  // const dbTags = useWatch({
+  //   control,
+  //   name: "tags",
+  //   defaultValue: [],
+  // });
+  //
+  // // Transform categories and tags into options format
+  // const categoryOptions = categories.map((category) => ({
+  //   value: category.id,
+  //   label: category.name,
+  // }));
+  // const tagOptions = tags.map((tag) => ({
+  //   value: tag.id,
+  //   label: tag.name,
+  // }));
+  //
+  // // Map selected category IDs back to their corresponding options
+  // const selectedCategoryOptions = categoryOptions.filter((option) =>
+  //   dbCategories.map((category) => category.value).includes(option.value),
+  // );
+  // const selectedTagOptions = tagOptions.filter((option) =>
+  //   dbTags.map((tag) => tag.value).includes(option.value),
+  // );
 
   const handleDescriptionChange = (content: string) => {
     setValue("description", content);
@@ -129,38 +126,38 @@ const ProductDetailsForm: React.FC<{ categories: any[]; tags: any[] }> = ({
         />
       </div>
 
-      <div className="">
-        <label className="block text-sm font-medium text-black dark:text-white">
-          Category
-        </label>
-        <Select
-          isMulti
-          options={categoryOptions}
-          value={selectedCategoryOptions}
-          className="mt-1"
-          classNamePrefix="react-select"
-          placeholder="Select categories"
-          onChange={(selectedOptions) => {
-            setValue("categories", selectedOptions || []);
-          }}
-        />
-      </div>
-      <div className="">
-        <label className="block text-sm font-medium text-black dark:text-white">
-          Tags
-        </label>
-        <Select
-          isMulti
-          options={tagOptions}
-          value={selectedTagOptions}
-          className="mt-1"
-          classNamePrefix="react-select"
-          placeholder="Select tags"
-          onChange={(selectedOptions) => {
-            setValue("tags", selectedOptions || []);
-          }}
-        />
-      </div>
+      {/*<div className="">*/}
+      {/*  <label className="block text-sm font-medium text-black dark:text-white">*/}
+      {/*    Category*/}
+      {/*  </label>*/}
+      {/*  <Select*/}
+      {/*    isMulti*/}
+      {/*    options={categoryOptions}*/}
+      {/*    value={selectedCategoryOptions}*/}
+      {/*    className="mt-1"*/}
+      {/*    classNamePrefix="react-select"*/}
+      {/*    placeholder="Select categories"*/}
+      {/*    onChange={(selectedOptions) => {*/}
+      {/*      setValue("categories", selectedOptions || []);*/}
+      {/*    }}*/}
+      {/*  />*/}
+      {/*</div>*/}
+      {/*<div className="">*/}
+      {/*  <label className="block text-sm font-medium text-black dark:text-white">*/}
+      {/*    Tags*/}
+      {/*  </label>*/}
+      {/*  <Select*/}
+      {/*    isMulti*/}
+      {/*    options={tagOptions}*/}
+      {/*    value={selectedTagOptions}*/}
+      {/*    className="mt-1"*/}
+      {/*    classNamePrefix="react-select"*/}
+      {/*    placeholder="Select tags"*/}
+      {/*    onChange={(selectedOptions) => {*/}
+      {/*      setValue("tags", selectedOptions || []);*/}
+      {/*    }}*/}
+      {/*  />*/}
+      {/*</div>*/}
     </div>
   );
 };

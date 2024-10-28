@@ -8,6 +8,8 @@ import ImageUploadSection from "@/components/products/ImageUploadSection";
 import ProductTypeForm from "@/components/products/ProductTypeForm";
 import VariantSection from "@/components/products/VariantSection";
 import { toast } from "react-toastify";
+import Select from "react-select";
+import AddProductSidebar from "@/components/products/AddProductSidebar";
 
 const AddProduct: React.FC = () => {
   const methods = useForm({
@@ -26,6 +28,8 @@ const AddProduct: React.FC = () => {
   const [featuredImage, setFeaturedImage] = useState<File | null>(null);
   const [galleryImages, setGalleryImages] = useState<File[]>([]);
   const [generatedVariants, setGeneratedVariants] = useState<any[]>([]);
+
+  const [removedImages, setRemovedImages] = useState<string[]>([]);
 
   const fetchInitialData = async () => {
     try {
@@ -62,6 +66,11 @@ const AddProduct: React.FC = () => {
   const onDropGalleryImages = (acceptedFiles: File[]) => {
     setGalleryImages(acceptedFiles);
     setValue("gallery", acceptedFiles);
+  };
+
+  const handleRemoveImage = (image: string) => {
+    setRemovedImages((prev) => [...prev, image]);
+    setGalleryImages((prevImages) => prevImages.filter((img) => img !== image));
   };
 
   const onSubmit = async (data: any) => {
@@ -134,7 +143,11 @@ const AddProduct: React.FC = () => {
           }
 
           // Add variant image if available
-          if (variant.image) {
+          if (
+            variant.image &&
+            variant.image instanceof File &&
+            variant.image.type.startsWith("image/")
+          ) {
             formData.append(`variants[${index}][image]`, variant.image);
           }
         });
@@ -158,22 +171,24 @@ const AddProduct: React.FC = () => {
       }
 
       toast.promise(
-        axiosInstance.post("/products", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }),
+        axiosInstance
+          .post("/products", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then(() => {
+            // Reset form fields and images upon successful submission
+            methods.reset();
+            setFeaturedImage(null);
+            setGalleryImages([]);
+          }),
         {
           pending: "Adding product...",
           success: "Product added successfully!",
           error: "Failed to add product. Please try again.",
         },
       );
-
-      // Optionally, reset the form or handle further actions
-      methods.reset();
-      setFeaturedImage(null);
-      setGalleryImages([]);
     } catch (error: any) {
       console.error("Error adding product:", error);
       if (error.response && error.response.data) {
@@ -209,13 +224,8 @@ const AddProduct: React.FC = () => {
               Add Product
             </h1>
 
-            <ProductDetailsForm categories={categories} tags={tags} />
-            <ImageUploadSection
-              onDropFeaturedImage={onDropFeaturedImage}
-              onDropGalleryImages={onDropGalleryImages}
-              featuredImage={featuredImage}
-              galleryImages={galleryImages}
-            />
+            <ProductDetailsForm />
+
             <ProductTypeForm categories={categories} />
             <VariantSection
               attributes={attributes}
@@ -224,14 +234,16 @@ const AddProduct: React.FC = () => {
               setGeneratedVariants={setGeneratedVariants}
             />
           </div>
-          <div className="col-span-4 rounded bg-white p-6 shadow-md dark:border-strokedark dark:bg-boxdark">
-            <button
-              type="submit"
-              className="mt-4 inline-flex items-center justify-center rounded-md bg-meta-3 px-10 py-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
-            >
-              Add Product
-            </button>
-          </div>
+          <AddProductSidebar
+            onDropFeaturedImage={onDropFeaturedImage}
+            onDropGalleryImages={onDropGalleryImages}
+            featuredImage={featuredImage}
+            galleryImages={galleryImages}
+            onRemoveImage={handleRemoveImage}
+            removedImages={removedImages}
+            categories={categories}
+            tags={tags}
+          />
         </div>
       </form>
     </FormProvider>

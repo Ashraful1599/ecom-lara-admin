@@ -6,8 +6,8 @@ interface ImageUploadSectionProps {
   onDropGalleryImages: (acceptedFiles: File[]) => void;
   featuredImage: File | string | null;
   galleryImages: (File | string)[];
-  onRemoveImage: (image: string) => void;
-  removedImages?: string[];
+  onRemoveImage: (image: string) => void | null;
+  removedImages?: string[] | null;
 }
 
 const ImageUploadSection: React.FC<ImageUploadSectionProps> = ({

@@ -4,6 +4,7 @@ import "@/css/satoshi.css";
 import "@/css/style.css";
 import "react-quill/dist/quill.snow.css"; // Import Quill styles
 import "react-toastify/dist/ReactToastify.css";
+import "react-loading-skeleton/dist/skeleton.css";
 
 import React, { useEffect, useState } from "react";
 import ReduxProvider from "@/components/ReduxProvider";

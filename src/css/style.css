@@ -241,3 +241,43 @@ input[type="search"]::-webkit-search-cancel-button {
 [x-cloak] {
     display: none !important;
 }
+
+/**pagination style */
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    list-style-type: none;
+    padding: 0;
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.pagination a {
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.pagination a:hover {
+    background-color: #f0f0f0;
+    color: #0056b3;
+}
+
+.pagination .active a {
+    background-color: rgb(79 70 229 / var(--tw-bg-opacity));
+    color: #fff;
+    border-color: #0056b3;
+}
+
+.pagination .disabled a {
+    color: #bbb;
+    cursor: not-allowed;
+}
