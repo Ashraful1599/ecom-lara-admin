@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "@/utils/axiosInstance";
 import { RootState } from "@/store/store";
+import { toast } from "react-toastify";
 
 // Define a type for the category state
 interface Category {
@@ -46,7 +47,14 @@ export const addCategory = createAsyncThunk<
   { state: RootState }
 >("categories/addCategory", async (categoryData, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.post("/categories", categoryData);
+    const response = await toast.promise(
+      axiosInstance.post("/categories", categoryData),
+      {
+        pending: "Creating category...",
+        success: "Category created successfully!",
+        error: "Failed to create category.",
+      },
+    );
     return response.data;
   } catch (error: any) {
     console.error(error.response?.data || "Error adding category");
@@ -61,7 +69,14 @@ export const updateCategory = createAsyncThunk<
   { state: RootState }
 >("categories/updateCategory", async ({ id, name }, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.put(`/categories/${id}`, { name });
+    const response = await toast.promise(
+      axiosInstance.put(`/categories/${id}`, { name }),
+      {
+        pending: "Updating category...",
+        success: "Category updated successfully!",
+        error: "Failed to update category.",
+      },
+    );
     return response.data;
   } catch (error: any) {
     console.error(error.response?.data || "Error updating category");
@@ -76,7 +91,11 @@ export const deleteCategory = createAsyncThunk<
   { state: RootState }
 >("categories/deleteCategory", async (id, { rejectWithValue }) => {
   try {
-    await axiosInstance.delete(`/categories/${id}`);
+    await toast.promise(axiosInstance.delete(`/categories/${id}`), {
+      pending: "Deleting category...",
+      success: "Category deleted successfully!",
+      error: "Failed to delete category.",
+    });
     return { id };
   } catch (error: any) {
     console.error(error.response?.data || "Error deleting category");

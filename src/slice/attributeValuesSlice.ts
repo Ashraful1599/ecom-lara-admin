@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "@/utils/axiosInstance";
 import { RootState } from "@/store/store";
+import { toast } from "react-toastify";
 
 // Define a type for the attribute value state
 interface AttributeValue {
@@ -24,7 +25,7 @@ const initialState: AttributeValuesState = {
   error: null,
 };
 
-// Fetch attribute values for a specific attribute from the API
+// Fetch attribute values for a specific attribute
 export const fetchAttributeValues = createAsyncThunk<
   AttributeValue[],
   number,
@@ -46,7 +47,7 @@ export const fetchAttributeValues = createAsyncThunk<
   },
 );
 
-// Add an attribute value for a specific attribute
+// Add an attribute value
 export const addAttributeValue = createAsyncThunk<
   AttributeValue,
   { attributeId: number; value: string },
@@ -55,9 +56,13 @@ export const addAttributeValue = createAsyncThunk<
   "attributeValues/addAttributeValue",
   async ({ attributeId, value }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post(
-        `/attributes/${attributeId}/values`,
-        { value },
+      const response = await toast.promise(
+        axiosInstance.post(`/attributes/${attributeId}/values`, { value }),
+        {
+          pending: "Adding attribute value...",
+          success: "Attribute value added successfully!",
+          error: "Failed to add attribute value.",
+        },
       );
       return response.data;
     } catch (error: any) {
@@ -78,9 +83,15 @@ export const updateAttributeValue = createAsyncThunk<
   "attributeValues/updateAttributeValue",
   async ({ attributeId, valueId, value }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.put(
-        `/attributes/${attributeId}/values/${valueId}`,
-        { value },
+      const response = await toast.promise(
+        axiosInstance.put(`/attributes/${attributeId}/values/${valueId}`, {
+          value,
+        }),
+        {
+          pending: "Updating attribute value...",
+          success: "Attribute value updated successfully!",
+          error: "Failed to update attribute value.",
+        },
       );
       return response.data;
     } catch (error: any) {
@@ -101,8 +112,13 @@ export const deleteAttributeValue = createAsyncThunk<
   "attributeValues/deleteAttributeValue",
   async ({ attributeId, valueId }, { rejectWithValue }) => {
     try {
-      await axiosInstance.delete(
-        `/attributes/${attributeId}/values/${valueId}`,
+      await toast.promise(
+        axiosInstance.delete(`/attributes/${attributeId}/values/${valueId}`),
+        {
+          pending: "Deleting attribute value...",
+          success: "Attribute value deleted successfully!",
+          error: "Failed to delete attribute value.",
+        },
       );
       return { attributeId, valueId };
     } catch (error: any) {

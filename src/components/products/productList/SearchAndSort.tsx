@@ -26,7 +26,7 @@ const SearchAndSort: React.FC<SearchAndSortProps> = ({
     />
     <button
       onClick={onSortChange}
-      className="flex items-center rounded-md bg-teal-600 px-4 py-2 text-white"
+      className="flex items-center rounded-md bg-teal-600 px-4 py-2 text-white hover:bg-opacity-90"
     >
       <FaSort /> Sort Price (
       {sortDirection === "asc" ? "Low to High" : "High to Low"})

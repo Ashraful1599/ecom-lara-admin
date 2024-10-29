@@ -46,7 +46,7 @@ const menuGroups = [
           </svg>
         ),
         label: "Products",
-        route: "/products",
+        route: "#",
         children: [
           { label: "Products", route: "/products" },
           { label: "Add product", route: "/products/add" },
@@ -82,10 +82,10 @@ const menuGroups = [
         ),
         label: "Categories",
         route: "/categories",
-        children: [
-          { label: "Categories", route: "/categories" },
-          { label: "Add categories", route: "/categories/add" },
-        ],
+        // children: [
+        //   { label: "Categories", route: "/categories" },
+        //   { label: "Add categories", route: "/categories/add" },
+        // ],
       },
       {
         icon: (
@@ -117,10 +117,6 @@ const menuGroups = [
         ),
         label: "Tags",
         route: "/tags",
-        children: [
-          { label: "Tags", route: "/tags" },
-          { label: "Add tag", route: "/tags/add" },
-        ],
       },
       {
         icon: (
@@ -152,10 +148,6 @@ const menuGroups = [
         ),
         label: "Attributes",
         route: "/attributes",
-        children: [
-          { label: "Attributes", route: "/attributes" },
-          { label: "Add attributes", route: "/attributes/add" },
-        ],
       },
 
       {

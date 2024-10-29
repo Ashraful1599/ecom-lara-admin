@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "@/utils/axiosInstance";
 import { RootState } from "@/store/store";
+import { toast } from "react-toastify";
 
 // Define a type for the attribute state
 interface Attribute {
@@ -46,7 +47,14 @@ export const addAttribute = createAsyncThunk<
   { state: RootState }
 >("attributes/addAttribute", async (attributeData, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.post("/attributes", attributeData);
+    const response = await toast.promise(
+      axiosInstance.post("/attributes", attributeData),
+      {
+        pending: "Adding attribute...",
+        success: "Attribute added successfully!",
+        error: "Failed to add attribute.",
+      },
+    );
     return response.data;
   } catch (error: any) {
     console.error(error.response?.data || "Error adding attribute");
@@ -61,7 +69,14 @@ export const updateAttribute = createAsyncThunk<
   { state: RootState }
 >("attributes/updateAttribute", async ({ id, name }, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.put(`/attributes/${id}`, { name });
+    const response = await toast.promise(
+      axiosInstance.put(`/attributes/${id}`, { name }),
+      {
+        pending: "Updating attribute...",
+        success: "Attribute updated successfully!",
+        error: "Failed to update attribute.",
+      },
+    );
     return response.data;
   } catch (error: any) {
     console.error(error.response?.data || "Error updating attribute");
@@ -76,7 +91,11 @@ export const deleteAttribute = createAsyncThunk<
   { state: RootState }
 >("attributes/deleteAttribute", async (id, { rejectWithValue }) => {
   try {
-    await axiosInstance.delete(`/attributes/${id}`);
+    await toast.promise(axiosInstance.delete(`/attributes/${id}`), {
+      pending: "Deleting attribute...",
+      success: "Attribute deleted successfully!",
+      error: "Failed to delete attribute.",
+    });
     return { id };
   } catch (error: any) {
     console.error(error.response?.data || "Error deleting attribute");

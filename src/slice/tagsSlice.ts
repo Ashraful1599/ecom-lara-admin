@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "@/utils/axiosInstance";
 import { RootState } from "@/store/store";
+import { toast } from "react-toastify";
 
 // Define a type for the tag state
 interface Tag {
@@ -45,7 +46,11 @@ export const addTag = createAsyncThunk<
   { state: RootState }
 >("tags/addTag", async (tagData, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.post("/tags", tagData);
+    const response = await toast.promise(axiosInstance.post("/tags", tagData), {
+      pending: "Adding tag...",
+      success: "Tag added successfully!",
+      error: "Failed to add tag.",
+    });
     return response.data;
   } catch (error: any) {
     console.error(error.response?.data || "Error adding tag");
@@ -60,7 +65,14 @@ export const updateTag = createAsyncThunk<
   { state: RootState }
 >("tags/updateTag", async ({ id, name }, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.put(`/tags/${id}`, { name });
+    const response = await toast.promise(
+      axiosInstance.put(`/tags/${id}`, { name }),
+      {
+        pending: "Updating tag...",
+        success: "Tag updated successfully!",
+        error: "Failed to update tag.",
+      },
+    );
     return response.data;
   } catch (error: any) {
     console.error(error.response?.data || "Error updating tag");
@@ -75,7 +87,11 @@ export const deleteTag = createAsyncThunk<
   { state: RootState }
 >("tags/deleteTag", async (id, { rejectWithValue }) => {
   try {
-    await axiosInstance.delete(`/tags/${id}`);
+    await toast.promise(axiosInstance.delete(`/tags/${id}`), {
+      pending: "Deleting tag...",
+      success: "Tag deleted successfully!",
+      error: "Failed to delete tag.",
+    });
     return { id };
   } catch (error: any) {
     console.error(error.response?.data || "Error deleting tag");

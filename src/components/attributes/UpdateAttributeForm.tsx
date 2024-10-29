@@ -3,22 +3,33 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useAppDispatch } from "@/store/store";
-import { addTag } from "@/slice/tagsSlice";
+import { updateAttributeValue } from "@/slice/attributeValuesSlice"; // Adjust the import path if necessary
 
-interface TagFormValues {
-  name: string;
-  slug: string;
+interface AttributeValueFormValues {
+  value: string;
 }
 
-const AddTag: React.FC = () => {
-  const { register, handleSubmit, reset } = useForm<TagFormValues>();
+interface UpdateAttributeValueFormProps {
+  attributeId: number;
+  valueId: number;
+  initialData: AttributeValueFormValues;
+}
+
+const UpdateAttributeValueForm: React.FC<UpdateAttributeValueFormProps> = ({
+  attributeId,
+  valueId,
+  initialData,
+}) => {
+  const { register, handleSubmit, reset } = useForm<AttributeValueFormValues>({
+    defaultValues: initialData, // Prefill with initial data
+  });
 
   const dispatch = useAppDispatch();
 
-  const onSubmit = (data: TagFormValues) => {
-    dispatch(addTag(data));
-    console.log("Form data:", data);
-    reset(); // Reset form after submission if needed
+  const onSubmit = (data: AttributeValueFormValues) => {
+    dispatch(updateAttributeValue({ attributeId, valueId, ...data })); // Dispatch update action with attribute and value IDs
+    console.log("Updated data:", data);
+    reset(data); // Reset form with the updated data if needed
   };
 
   return (
@@ -27,28 +38,27 @@ const AddTag: React.FC = () => {
       className="mx-auto w-full min-w-full max-w-lg rounded bg-white p-6 shadow-md dark:border-strokedark dark:bg-boxdark"
     >
       <h1 className="mb-4 text-2xl font-bold text-black dark:text-white">
-        Add Tag
+        Update Attribute Value
       </h1>
       <div className="mb-4">
         <label className="block text-sm font-medium text-black dark:text-white">
-          Tag Name
+          Value
         </label>
         <input
           type="text"
-          {...register("name", { required: true })}
+          {...register("value", { required: true })}
           className="mt-1 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
-          placeholder="Enter tag name"
+          placeholder="Enter attribute value"
         />
       </div>
-
       <button
         type="submit"
         className="inline-flex items-center justify-center rounded-md bg-indigo-600 px-10 py-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
       >
-        Add Tag
+        Update Value
       </button>
     </form>
   );
 };
 
-export default AddTag;
+export default UpdateAttributeValueForm;

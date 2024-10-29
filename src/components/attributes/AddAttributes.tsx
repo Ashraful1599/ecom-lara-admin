@@ -54,7 +54,7 @@ const AddAttribute: React.FC = () => {
 
       <button
         type="submit"
-        className="inline-flex items-center justify-center rounded-md bg-meta-3 px-10 py-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+        className="inline-flex items-center justify-center rounded-md bg-indigo-600 px-10 py-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
       >
         Add Attribute
       </button>
