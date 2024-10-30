@@ -1,10 +1,35 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import ClickOutside from "@/components/ClickOutside";
+import { logout } from "@/lib/auth";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await logout();
+      router.push("/login"); // Redirect after login
+
+      await toast.promise(
+        logout().then(() => {
+          router.push("/login");
+        }),
+        {
+          pending: "Logout in progress..",
+          success: "Logout successfully",
+          error: "Logout failed!",
+        },
+      );
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+  };
 
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
@@ -128,7 +153,10 @@ const DropdownUser = () => {
               </Link>
             </li>
           </ul>
-          <button className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+          >
             <svg
               className="fill-current"
               width="22"
