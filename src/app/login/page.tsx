@@ -14,13 +14,21 @@ const SignIn: React.FC = () => {
     e.preventDefault();
     try {
       await toast.promise(
-        login(email, password).then(() => {
-          router.push("/"); // Redirect after login
-        }),
+        login(email, password)
+          .then((response) => {
+            const successMessage =
+              response?.data?.message || "Login successfully";
+            toast.success(successMessage);
+            router.push("/"); // Redirect after login
+          })
+          .catch((error) => {
+            const errorMessage =
+              error.response?.data?.message ||
+              "Username or Password is incorrect!";
+            toast.error(errorMessage);
+          }),
         {
-          pending: "Login in progress..",
-          success: "Login successfully",
-          error: "Username or Password is incorrect!",
+          pending: "Login in progress...",
         },
       );
     } catch (error) {

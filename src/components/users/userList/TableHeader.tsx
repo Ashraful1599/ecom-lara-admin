@@ -7,11 +7,11 @@ interface ProductTableHeaderProps {
   onSelectAll: () => void;
 }
 
-const ProductTableHeader: React.FC<ProductTableHeaderProps> = ({
+const TableHeader: React.FC<ProductTableHeaderProps> = ({
   isAllSelected,
   onSelectAll,
 }) => (
-  <div className="grid grid-cols-12 border-t border-stroke px-4 py-2 dark:border-strokedark">
+  <div className="grid grid-cols-7 border-t border-stroke px-4 py-2 dark:border-strokedark">
     <div className="col-span-1 flex items-center justify-center gap-4 text-center">
       <input
         type="checkbox"
@@ -21,19 +21,14 @@ const ProductTableHeader: React.FC<ProductTableHeaderProps> = ({
       />
       #ID
     </div>
-    <div className="col-span-3">
-      <p className="font-medium">Product Name</p>
+    <div className="col-span-2">
+      <p className="font-medium">Name</p>
     </div>
-    {[
-      "SKU",
-      "Category",
-      "Price",
-      "Sale Price",
-      "Stock",
-      "Type",
-      "Status",
-      "Action",
-    ].map((heading, idx) => (
+    <div className="col-span-2">
+      <p className="font-medium">Email</p>
+    </div>
+
+    {["Role", "Action"].map((heading, idx) => (
       <div key={idx} className="col-span-1">
         <p className="font-medium">{heading}</p>
       </div>
@@ -41,4 +36,4 @@ const ProductTableHeader: React.FC<ProductTableHeaderProps> = ({
   </div>
 );
 
-export default ProductTableHeader;
+export default TableHeader;

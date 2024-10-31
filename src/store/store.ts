@@ -5,6 +5,7 @@ import categoriesReducer from "@/slice/categoriesSlice";
 import tagsReducer from "@/slice/tagsSlice";
 import attributesReducer from "@/slice/attributesSlice";
 import attributeValuesReducer from "@/slice/attributeValuesSlice";
+import usersReducer from "@/slice/usersSlice";
 // Configure the store
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     tags: tagsReducer,
     attributes: attributesReducer,
     attributeValues: attributeValuesReducer,
+    users: usersReducer,
   },
   // No need to add thunk middleware explicitly; it's included by default
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),

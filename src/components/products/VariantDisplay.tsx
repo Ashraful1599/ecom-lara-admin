@@ -44,7 +44,10 @@ const VariantDisplay: React.FC<VariantDisplayProps> = ({
         Variants
       </h2>
       {variants.map((variant, index) => (
-        <div key={index} className="mb-4 rounded-lg border p-4 dark:bg-boxdark">
+        <div
+          key={index}
+          className="mb-4 rounded-lg border px-4 py-2 dark:bg-boxdark"
+        >
           <div
             className="flex cursor-pointer items-center justify-between"
             onClick={() => toggleAccordion(index)}
