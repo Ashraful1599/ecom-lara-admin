@@ -4,9 +4,9 @@ const nextConfig = {
     images: {
         remotePatterns: [
             {
-                protocol: 'http',
-                hostname: 'localhost',
-                port: '8000',
+                protocol: process.env.NODE_ENV === 'production' ? 'https' : 'http',  // Use HTTPS in production
+                hostname: process.env.NEXT_PUBLIC_BACKEND_URL ? new URL(process.env.NEXT_PUBLIC_BACKEND_URL).hostname : 'localhost',
+                port: process.env.NEXT_PUBLIC_BACKEND_URL && new URL(process.env.NEXT_PUBLIC_BACKEND_URL).port ? new URL(process.env.NEXT_PUBLIC_BACKEND_URL).port : (process.env.NODE_ENV === 'production' ? '' : '8000'),
                 pathname: '/storage/**',
             },
         ],
