@@ -4,6 +4,7 @@ import { useFormContext } from "react-hook-form";
 import VariantDropzone from "@/components/products/VariantDropzone";
 
 type Variant = {
+  id: number;
   attributes: { [key: string]: string };
   price?: number;
   salePrice?: number;
@@ -19,7 +20,7 @@ type attributes = {
 
 type VariantDisplayProps = {
   variants: Variant[];
-  attributes: [];
+  attributes: any[];
 };
 
 const VariantDisplay: React.FC<VariantDisplayProps> = ({
@@ -32,9 +33,9 @@ const VariantDisplay: React.FC<VariantDisplayProps> = ({
   const toggleAccordion = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
-
+  //@ts-ignore
   const getAttributeName = (attrId) => {
-    const attribute = attributes.find((attr) => attr.id == attrId);
+    const attribute: any = attributes.find((attr: any) => attr.id == attrId);
     return attribute ? attribute.name : undefined;
   };
 
@@ -55,7 +56,9 @@ const VariantDisplay: React.FC<VariantDisplayProps> = ({
             <h3 className="text-lg font-semibold text-indigo-700 dark:text-indigo-300">
               {variant.id
                 ? variant.attributes
+                    //@ts-ignore
                     .map(
+                      //@ts-ignore
                       (attr) =>
                         `${getAttributeName(attr.attribute_id)}: ${attr.value}`,
                     )
@@ -70,7 +73,6 @@ const VariantDisplay: React.FC<VariantDisplayProps> = ({
           </div>
           {openIndex === index && (
             <div className="mt-4">
-              {console.log("s display variant", variant)}
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <div className="mb-2">
                   <label className="block text-sm font-medium text-black dark:text-white">

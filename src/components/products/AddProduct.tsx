@@ -4,12 +4,12 @@ import React, { useState, useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import axiosInstance from "@/utils/axiosInstance";
 import ProductDetailsForm from "@/components/products/ProductDetailsForm";
-import ImageUploadSection from "@/components/products/ImageUploadSection";
 import ProductTypeForm from "@/components/products/ProductTypeForm";
 import VariantSection from "@/components/products/VariantSection";
 import { toast } from "react-toastify";
-import Select from "react-select";
 import AddProductSidebar from "@/components/products/AddProductSidebar";
+import useProductData from "@/hooks/useProductData";
+import { handleDataUpload } from "@/utils/handleDataUpload";
 
 const AddProduct: React.FC = () => {
   const methods = useForm({
@@ -17,155 +17,62 @@ const AddProduct: React.FC = () => {
       productType: "simple",
       productStatus: "published",
       variants: [],
+      gallery: [],
+      options: [],
     },
   });
 
   const { handleSubmit, setValue, control } = methods;
 
-  const [categories, setCategories] = useState([]);
-  const [tags, setTags] = useState([]);
-  const [attributes, setAttributes] = useState([]);
   const [featuredImage, setFeaturedImage] = useState<File | null>(null);
   const [galleryImages, setGalleryImages] = useState<File[]>([]);
   const [generatedVariants, setGeneratedVariants] = useState<any[]>([]);
 
   const [removedImages, setRemovedImages] = useState<string[]>([]);
 
-  const fetchInitialData = async () => {
-    try {
-      const categoriesResponse = await axiosInstance.get("/categories");
-      setCategories(categoriesResponse.data);
+  // Fetch categories, tags, and attributes for the update form
+  const { categories, tags, attributes, fetchInitialData } = useProductData();
 
-      const tagsResponse = await axiosInstance.get("/tags");
-      setTags(tagsResponse.data);
-
-      const attributesResponse = await axiosInstance.get("/attributes");
-      const fetchedAttributes = attributesResponse.data.map((attr: any) => ({
-        name: attr.name,
-        values: attr.values.map((value: any) => value.value),
-      }));
-      setAttributes(fetchedAttributes);
-    } catch (error) {
-      toast.error("Failed to fetch initial data. Please try again.");
-    }
-  };
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchInitialData();
   }, []);
 
   const handleOptionChange = () => {
-    setValue("options", methods.getValues("options"));
+    setValue("options" as any, methods.getValues("options"));
   };
 
   const onDropFeaturedImage = (acceptedFiles: File[]) => {
     setFeaturedImage(acceptedFiles[0]);
-    setValue("featuredImage", acceptedFiles[0]);
+
+    setValue("featuredImage" as any, acceptedFiles[0]);
   };
 
   const onDropGalleryImages = (acceptedFiles: File[]) => {
-    setGalleryImages(acceptedFiles);
-    setValue("gallery", acceptedFiles);
+    setGalleryImages([...galleryImages, ...acceptedFiles]);
+    setValue("gallery" as any, [...galleryImages, ...acceptedFiles]);
   };
 
   const handleRemoveImage = (image: string) => {
     setRemovedImages((prev) => [...prev, image]);
+    //@ts-ignore
     setGalleryImages((prevImages) => prevImages.filter((img) => img !== image));
   };
 
   const onSubmit = async (data: any) => {
-    console.log("categories", JSON.stringify(data.categories, null, 2));
+    //   console.log("categories", JSON.stringify(data.categories, null, 2));
 
     try {
-      // Prepare form data
-      const formData = new FormData();
-      formData.append("name", data.name);
-      formData.append("price", data.price ? data.price.toString() : "0");
-      formData.append(
-        "salePrice",
-        data.salePrice ? data.salePrice.toString() : "0",
-      );
-      formData.append("sku", data.sku);
-      formData.append("stock", data.stock ? data.stock.toString() : "0");
-      formData.append("description", data.description || "");
-      formData.append("productType", data.productType);
-      formData.append("productStatus", data.productStatus);
-
-      // Add categories as an array of IDs
-      if (data.categories && Array.isArray(data.categories)) {
-        data.categories.forEach((category: { value: number }) => {
-          formData.append("categories[]", category.value.toString());
-        });
-      }
-
-      // Add tags as an array of IDs
-      if (data.tags && Array.isArray(data.tags)) {
-        data.tags.forEach((tag: { value: number }) => {
-          formData.append("tags[]", tag.value.toString());
-        });
-      }
-
-      // Add variants as individual array elements
-      if (data.variants && Array.isArray(data.variants)) {
-        data.variants.forEach((variant, index) => {
-          formData.append(
-            `variants[${index}][price]`,
-            variant.price.toString(),
-          );
-          if (variant.salePrice) {
-            formData.append(
-              `variants[${index}][salePrice]`,
-              variant.salePrice.toString(),
-            );
-          }
-          formData.append(`variants[${index}][sku]`, variant.sku);
-
-          if (!isNaN(variant.stock)) {
-            formData.append(
-              `variants[${index}][stock]`,
-              variant.stock.toString(),
-            );
-          } else {
-            console.warn(
-              `Invalid stock for variant at index ${index}. Setting to 0.`,
-            );
-            formData.append(`variants[${index}][stock]`, "0");
-          }
-
-          // Add variant attributes
-          if (variant.attributes) {
-            for (const [key, value] of Object.entries(variant.attributes)) {
-              formData.append(
-                `variants[${index}][attributes][${key}]`,
-                value as string,
-              );
-            }
-          }
-
-          // Add variant image if available
-          if (
-            variant.image &&
-            variant.image instanceof File &&
-            variant.image.type.startsWith("image/")
-          ) {
-            formData.append(`variants[${index}][image]`, variant.image);
-          }
-        });
-      }
-
-      // Add featured image if available
-      if (featuredImage) {
-        formData.append("featuredImage", featuredImage);
-      }
-
-      // Add gallery images if available
-      if (galleryImages.length > 0) {
-        galleryImages.forEach((file, index) => {
-          formData.append(`gallery[${index}]`, file);
-        });
-      }
+      const formData = handleDataUpload(data, {
+        featuredImage: featuredImage,
+        galleryImages: galleryImages.filter(
+          (img): img is File => img instanceof File,
+        ),
+        removedImages,
+      });
 
       // Log each form data entry for debugging
+      //@ts-ignore
       for (const pair of formData.entries()) {
         console.log(pair[0], pair[1]);
       }
@@ -224,9 +131,9 @@ const AddProduct: React.FC = () => {
               Add Product
             </h1>
 
-            <ProductDetailsForm />
+            <ProductDetailsForm categories={categories} tags={tags} />
 
-            <ProductTypeForm categories={categories} />
+            <ProductTypeForm />
             <VariantSection
               attributes={attributes}
               handleOptionChange={handleOptionChange}

@@ -1,9 +1,12 @@
 export const handleDataUpload = (
   data: any,
+  //@ts-ignore
   { featuredImage, galleryImages, removedImages },
 ) => {
   const formData = new FormData();
-  formData.append("_method", "PUT");
+  if (data.id) {
+    formData.append("_method", "PUT");
+  }
 
   formData.append("name", data.name);
   formData.append("slug", data.slug);
@@ -32,7 +35,7 @@ export const handleDataUpload = (
 
   // Add variants as individual array elements
   if (data.variants && Array.isArray(data.variants)) {
-    data.variants.forEach((variant, index) => {
+    data.variants.forEach((variant: any, index: any) => {
       formData.append(
         `variants[${index}][price]`,
         variant.price ? variant.price.toString() : "0", // Default to "0" if price is undefined
@@ -68,7 +71,8 @@ export const handleDataUpload = (
       }
 
       // Add variant image if available
-      if (variant.image) {
+
+      if (variant.image instanceof File) {
         formData.append(`variants[${index}][image]`, variant.image);
       }
     });
@@ -80,17 +84,18 @@ export const handleDataUpload = (
     formData.append("existingFeaturedImage", featuredImage);
   }
 
-  galleryImages.forEach((image, index) => {
+  galleryImages.forEach((image: any, index: any) => {
     if (!removedImages.includes(image as string)) {
       if (image instanceof File) {
         formData.append(`gallery[${index}]`, image);
-      } else if (typeof image === "string") {
-        formData.append("existingGalleryImages[]", image);
       }
+      // else if (typeof image === "string") {
+      //     formData.append("existingGalleryImages[]", image);
+      // }
     }
   });
 
-  removedImages.forEach((image) => {
+  removedImages.forEach((image: any) => {
     formData.append("removedImages[]", image);
   });
 

@@ -4,7 +4,7 @@ import ReactPaginate from "react-paginate";
 
 interface PaginationProps {
   pageCount: number;
-  onPageChange: (selectedItem: { selected: number }) => void;
+  onPageChange: (selected: { selected: number }) => void;
 }
 
 const Pagination: React.FC<PaginationProps> = ({ pageCount, onPageChange }) => (
@@ -14,8 +14,8 @@ const Pagination: React.FC<PaginationProps> = ({ pageCount, onPageChange }) => (
     breakLabel={"..."}
     pageCount={pageCount}
     marginPagesDisplayed={2}
-    pageRangeDisplayed={3}
-    onPageChange={onPageChange}
+    pageRangeDisplayed={5}
+    onPageChange={onPageChange} // Make sure onPageChange is defined in props
     containerClassName={"pagination"}
     activeClassName={"active"}
   />

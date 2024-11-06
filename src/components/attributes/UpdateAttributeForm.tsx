@@ -3,31 +3,29 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useAppDispatch } from "@/store/store";
-import { updateAttributeValue } from "@/slice/attributeValuesSlice"; // Adjust the import path if necessary
+import { updateAttribute } from "@/slice/attributesSlice";
 
-interface AttributeValueFormValues {
-  value: string;
+interface AttributeValueForm {
+  name: string;
 }
 
-interface UpdateAttributeValueFormProps {
+interface UpdateAttributeFormProps {
   attributeId: number;
-  valueId: number;
-  initialData: AttributeValueFormValues;
+  initialData: object;
 }
 
-const UpdateAttributeValueForm: React.FC<UpdateAttributeValueFormProps> = ({
+const UpdateAttributeForm: React.FC<UpdateAttributeFormProps> = ({
   attributeId,
-  valueId,
   initialData,
 }) => {
-  const { register, handleSubmit, reset } = useForm<AttributeValueFormValues>({
+  const { register, handleSubmit, reset } = useForm<AttributeValueForm>({
     defaultValues: initialData, // Prefill with initial data
   });
 
   const dispatch = useAppDispatch();
 
-  const onSubmit = (data: AttributeValueFormValues) => {
-    dispatch(updateAttributeValue({ attributeId, valueId, ...data })); // Dispatch update action with attribute and value IDs
+  const onSubmit = (data: AttributeValueForm) => {
+    dispatch(updateAttribute({ id: attributeId, ...data })); // Dispatch update action with attribute and value IDs
     console.log("Updated data:", data);
     reset(data); // Reset form with the updated data if needed
   };
@@ -38,27 +36,27 @@ const UpdateAttributeValueForm: React.FC<UpdateAttributeValueFormProps> = ({
       className="mx-auto w-full min-w-full max-w-lg rounded bg-white p-6 shadow-md dark:border-strokedark dark:bg-boxdark"
     >
       <h1 className="mb-4 text-2xl font-bold text-black dark:text-white">
-        Update Attribute Value
+        Update Attribute
       </h1>
       <div className="mb-4">
         <label className="block text-sm font-medium text-black dark:text-white">
-          Value
+          Name
         </label>
         <input
           type="text"
-          {...register("value", { required: true })}
+          {...register("name", { required: true })}
           className="mt-1 w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
-          placeholder="Enter attribute value"
+          placeholder="Name"
         />
       </div>
       <button
         type="submit"
         className="inline-flex items-center justify-center rounded-md bg-indigo-600 px-10 py-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
       >
-        Update Value
+        Update
       </button>
     </form>
   );
 };
 
-export default UpdateAttributeValueForm;
+export default UpdateAttributeForm;

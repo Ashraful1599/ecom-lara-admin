@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "react-hook-form";
+import Image from "next/image";
 
 type VariantDropzoneProps = {
   index: number;
@@ -14,9 +15,7 @@ const VariantDropzone: React.FC<VariantDropzoneProps> = ({
   //console.log("existingImage", existingImage);
 
   const { setValue, getValues } = useFormContext();
-  const [previewImage, setPreviewImage] = useState<string | null>(
-    existingImage || null,
-  );
+  const [previewImage, setPreviewImage] = useState<string | null>();
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles) => {
@@ -67,15 +66,18 @@ const VariantDropzone: React.FC<VariantDropzoneProps> = ({
         className="cursor-pointer rounded-lg border-2 border-dashed p-4"
       >
         <input {...getInputProps()} />
+
         {previewImage ? (
-          <img
+          <Image
+            width="80"
+            height="80"
             src={previewImage}
             alt="Selected"
             className="mb-2 h-20 w-full rounded-md object-cover"
           />
         ) : (
           <p className="text-center text-gray-500">
-            Drag 'n' drop an image, or click to select
+            Drag or drop an image, or click to select
           </p>
         )}
       </div>

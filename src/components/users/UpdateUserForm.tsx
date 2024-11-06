@@ -15,8 +15,8 @@ interface TagFormValues {
 }
 
 interface UpdateUserFormProps {
-  userId: number;
-  initialData: TagFormValues;
+  userId: string;
+  initialData: any; // Adjust this type to be more specific if you know the structure of userData
 }
 
 const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
@@ -96,7 +96,7 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
           placeholder="Select User Role"
           value={selectedUserRole || null}
           onChange={(selectedOption) => {
-            setValue("role", selectedOption?.value);
+            setValue("role", selectedOption?.value || "");
           }}
         />
       </div>

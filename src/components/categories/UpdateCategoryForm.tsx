@@ -12,14 +12,14 @@ interface CategoryFormValues {
 
 interface UpdateCategoryFormProps {
   categoryId: number;
-  initialData: CategoryFormValues;
+  initialData: any;
 }
 
 const UpdateCategoryForm: React.FC<UpdateCategoryFormProps> = ({
   categoryId,
   initialData,
 }) => {
-  const { register, handleSubmit, reset } = useForm<CategoryFormValues>({
+  const { register, handleSubmit, reset } = useForm<any>({
     defaultValues: initialData, // Prefill with initial data
   });
 

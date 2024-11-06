@@ -9,6 +9,9 @@ interface Attribute {
   id: number;
   name: string;
   slug: string;
+  values: {
+    value: string;
+  }[];
 }
 
 // State interface for attributes

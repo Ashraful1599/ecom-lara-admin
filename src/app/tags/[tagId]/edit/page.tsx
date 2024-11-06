@@ -38,7 +38,7 @@ const EditTagPage: React.FC = () => {
         {loading ? (
           <Loader />
         ) : (
-          <UpdateTagForm key={tagId} tagId={tagId} initialData={tagData} />
+          <UpdateTagForm tagId={Number(tagId)} initialData={tagData} />
         )}
       </div>
     </DefaultLayout>

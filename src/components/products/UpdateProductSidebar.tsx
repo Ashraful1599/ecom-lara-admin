@@ -13,6 +13,14 @@ interface UpdateProductSidebarProps {
   categories: any;
   tags: any;
 }
+interface Category {
+  id: number;
+  name: string;
+}
+interface Tag {
+  id: number;
+  name: string;
+}
 
 const UpdateProductSidebar: React.FC<UpdateProductSidebarProps> = ({
   onDropFeaturedImage,
@@ -59,25 +67,25 @@ const UpdateProductSidebar: React.FC<UpdateProductSidebarProps> = ({
   });
 
   // Transform categories and tags into options format
-  const categoryOptions = categories.map((category) => ({
+  const categoryOptions = categories.map((category: Category) => ({
     value: category.id,
     label: category.name,
   }));
-  const tagOptions = tags.map((tag) => ({
+  const tagOptions = tags.map((tag: Tag) => ({
     value: tag.id,
     label: tag.name,
   }));
 
   // Map selected category IDs back to their corresponding options
-  const selectedCategoryOptions = categoryOptions.filter((option) =>
-    dbCategories.map((category) => category.value).includes(option.value),
+  const selectedCategoryOptions = categoryOptions.filter((option: any) =>
+    dbCategories.map((category: any) => category.value).includes(option.value),
   );
-  const selectedTagOptions = tagOptions.filter((option) =>
-    dbTags.map((tag) => tag.value).includes(option.value),
+  const selectedTagOptions = tagOptions.filter((option: any) =>
+    dbTags.map((tag: any) => tag.value).includes(option.value),
   );
 
   return (
-    <div className="col-span-4 grid grid-cols-1 rounded bg-white p-6 shadow-md dark:border-strokedark dark:bg-boxdark">
+    <div className="col-span-4 flex flex-col gap-8 rounded bg-white p-6 shadow-md dark:border-strokedark dark:bg-boxdark">
       <div className="">
         <label className="block text-sm font-medium text-black dark:text-white">
           Category

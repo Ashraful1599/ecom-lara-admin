@@ -38,8 +38,7 @@ const EditCategoryPage: React.FC = () => {
           <Loader />
         ) : (
           <UpdateCategoryForm
-            key={categoryId}
-            categoryId={categoryId}
+            categoryId={Number(categoryId)}
             initialData={categoryData}
           />
         )}

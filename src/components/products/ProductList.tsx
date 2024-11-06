@@ -41,6 +41,7 @@ const ProductList: React.FC = () => {
         error: "Failed to delete the product. Please try again.",
       });
     }
+    await dispatch(fetchProducts());
   };
 
   const filteredProducts = products

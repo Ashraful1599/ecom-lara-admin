@@ -9,17 +9,16 @@ interface TagFormValues {
   name: string;
   slug: string;
 }
-
 interface UpdateTagFormProps {
-  tagId: number;
-  initialData: TagFormValues;
+  tagId: number; // Or `string` depending on the actual type of tagId
+  initialData: any; // Specify the structure of initialData if possible
 }
 
 const UpdateTagForm: React.FC<UpdateTagFormProps> = ({
   tagId,
   initialData,
 }) => {
-  const { register, handleSubmit, reset } = useForm<TagFormValues>({
+  const { register, handleSubmit, reset } = useForm({
     defaultValues: initialData, // Prefill with initial data
   });
 

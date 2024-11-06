@@ -10,7 +10,8 @@ type Attribute = {
 
 type VariantProps = {
   attributes: Attribute[];
-  onVariantsGenerated: (variants: any[]) => void;
+  // onVariantsGenerated: (variants: any[]) => void;
+  onVariantsGenerated?: React.Dispatch<React.SetStateAction<any[]>>;
 };
 
 const VariantManager: React.FC<VariantProps> = ({
@@ -25,7 +26,7 @@ const VariantManager: React.FC<VariantProps> = ({
       // Check if watchedOptions is defined and is an array
       if (!watchedOptions || !Array.isArray(watchedOptions)) {
         setValue("variants", []);
-        onVariantsGenerated([]);
+        onVariantsGenerated?.([]);
         return;
       }
 
@@ -58,10 +59,10 @@ const VariantManager: React.FC<VariantProps> = ({
           attributes: variant,
         }));
         setValue("variants", formattedVariants);
-        onVariantsGenerated(formattedVariants);
+        onVariantsGenerated?.(formattedVariants);
       } else {
         setValue("variants", []);
-        onVariantsGenerated([]);
+        onVariantsGenerated?.([]);
       }
     };
 

@@ -59,7 +59,7 @@ const AttributeOptionManager: React.FC<AttributeOptionManagerProps> = ({
       <h2 className="mb-4 text-xl font-semibold text-black dark:text-white">
         Options
       </h2>
-      {console.log("optionFields", optionFields)}
+
       {optionFields.map((field, index) => {
         const availableAttributes = getAvailableAttributes(index);
         const selectedAttributeId = watchedOptions?.[index]?.attributeId;

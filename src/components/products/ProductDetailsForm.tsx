@@ -57,6 +57,7 @@ const ProductDetailsForm: React.FC<{ categories: any[]; tags: any[] }> = () => {
         <label className="block text-sm font-medium text-black dark:text-white">
           Product Name*
         </label>
+        <input type="hidden" {...register("id", { required: false })} />
         <input
           type="text"
           {...register("name", { required: true })}

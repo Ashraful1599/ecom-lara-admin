@@ -38,8 +38,7 @@ const EditProductPage: React.FC = () => {
           <Loader />
         ) : (
           <UpdateProductForm
-            key={productId}
-            productId={productId}
+            productId={Number(productId)}
             initialData={productData}
           />
         )}

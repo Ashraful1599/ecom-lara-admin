@@ -89,7 +89,7 @@ const AddUser: React.FC = () => {
           placeholder="Select User Role"
           value={selectedUserRole || null}
           onChange={(selectedOption) => {
-            setValue("role", selectedOption?.value);
+            setValue("role", selectedOption?.value || "");
           }}
         />
       </div>

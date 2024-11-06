@@ -4,41 +4,39 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import axiosInstance from "@/utils/axiosInstance";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import UpdateCategoryForm from "@/components/categories/UpdateCategoryForm"; // Adjust the path if necessary
-import Loader from "@/components/common/Loader";
 import UpdateUserForm from "@/components/users/UpdateUserForm";
+import Loader from "@/components/common/Loader";
 
 const EditUserPage: React.FC = () => {
-  const { userId } = useParams(); // Fetch the categoryId from the URL segment
+  const { userId } = useParams(); // Fetch the userId from the URL segment
 
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (userId) {
-      const fetchUsers = async () => {
+      const fetchUser = async () => {
         try {
           const response = await axiosInstance.get(`/users/${userId}`);
           setUserData(response.data);
           setLoading(false);
         } catch (error) {
-          console.error("Error fetching category:", error);
+          console.error("Error fetching user:", error);
           setLoading(false);
         }
       };
 
-      fetchUsers();
+      fetchUser();
     }
   }, [userId]);
 
   return (
     <DefaultLayout>
       <div>
-        {/* Render UpdateCategoryForm only after categoryData is fully loaded */}
         {loading ? (
           <Loader />
         ) : (
-          <UpdateUserForm key={userId} userId={userId} initialData={userData} />
+          <UpdateUserForm userId={userId as string} initialData={userData} />
         )}
       </div>
     </DefaultLayout>

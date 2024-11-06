@@ -10,6 +10,10 @@ interface ProductTableRowProps {
   onToggleSelect: () => void;
   onDelete: (id: number) => void;
 }
+interface Category {
+  id: number;
+  name: string;
+}
 
 const ProductTableRow: React.FC<ProductTableRowProps> = ({
   product,
@@ -58,7 +62,8 @@ const ProductTableRow: React.FC<ProductTableRowProps> = ({
       <div key={idx} className="col-span-1 flex items-center">
         <p className="text-sm text-black dark:text-white">
           {field === "categories"
-            ? product.categories?.map((cat) => cat.name).join(", ") || "N/A"
+            ? product.categories?.map((cat: Category) => cat.name).join(", ") ||
+              "N/A"
             : field === "price" || field === "sale_price"
               ? `$${parseFloat(product[field]).toFixed(2) || "N/A"}`
               : product[field] || "N/A"}

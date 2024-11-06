@@ -3,9 +3,16 @@ import React from "react";
 import { FaSort } from "react-icons/fa";
 import Link from "next/link";
 
+// interface SearchAndSortProps {
+//   searchValue: string;
+//   //onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+//   onSearchChange: React.Dispatch<React.SetStateAction<string>>;
+//   setSort: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
+// }
 interface SearchAndSortProps {
   searchValue: string;
-  onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearchChange: any;
+  setSort: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
 }
 
 const SearchAndSort: React.FC<SearchAndSortProps> = ({

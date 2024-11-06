@@ -2,10 +2,27 @@ import { useState } from "react";
 import axiosInstance from "@/utils/axiosInstance";
 import { toast } from "react-toastify";
 
+type Attribute = {
+  id: number;
+  name: string;
+  value: string;
+};
+
+interface Category {
+  name: string;
+  id: number;
+  slug: string;
+}
+interface Tag {
+  name: string;
+  id: number;
+  slug: string;
+}
+
 const useProductData = () => {
-  const [categories, setCategoriesState] = useState([]);
-  const [tags, setTagsState] = useState([]);
-  const [attributes, setAttributesState] = useState([]);
+  const [categories, setCategoriesState] = useState<Category[]>([]);
+  const [tags, setTagsState] = useState<Tag[]>([]);
+  const [attributes, setAttributesState] = useState<Attribute[]>([]);
 
   const fetchInitialData = async () => {
     try {

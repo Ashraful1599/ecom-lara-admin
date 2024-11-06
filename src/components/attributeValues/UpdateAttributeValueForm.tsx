@@ -5,14 +5,10 @@ import { useForm } from "react-hook-form";
 import { useAppDispatch } from "@/store/store";
 import { updateAttributeValue } from "@/slice/attributeValuesSlice"; // Adjust the import path if necessary
 
-interface AttributeValueFormValues {
-  value: string;
-}
-
 interface UpdateAttributeValueFormProps {
   attributeId: number;
   valueId: number;
-  initialData: AttributeValueFormValues;
+  initialData: any;
 }
 
 const UpdateAttributeValueForm: React.FC<UpdateAttributeValueFormProps> = ({
@@ -20,14 +16,14 @@ const UpdateAttributeValueForm: React.FC<UpdateAttributeValueFormProps> = ({
   valueId,
   initialData,
 }) => {
-  const { register, handleSubmit, reset } = useForm<AttributeValueFormValues>({
+  const { register, handleSubmit, reset } = useForm<any>({
     defaultValues: initialData, // Prefill with initial data
   });
 
   const dispatch = useAppDispatch();
 
-  const onSubmit = (data: AttributeValueFormValues) => {
-    dispatch(updateAttributeValue({ attributeId, valueId, ...data })); // Dispatch update action with attribute and value IDs
+  const onSubmit = (data: any) => {
+    dispatch(updateAttributeValue({ attributeId, valueId, value: data.value })); // Dispatch update action with attribute and value IDs
     console.log("Updated data:", data);
     reset(data); // Reset form with the updated data if needed
   };

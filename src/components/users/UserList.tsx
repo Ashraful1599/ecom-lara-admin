@@ -55,6 +55,7 @@ const UserList: React.FC = () => {
         user.email.toLowerCase().includes(search.toLowerCase()) ||
         user.id.toString().includes(search),
     )
+    //@ts-ignore
     .sort((a, b) => (sort === "asc" ? a.price - b.price : b.price - a.price));
 
   const pageCount = Math.ceil(filteredUsers.length / itemsPerPage);
@@ -144,10 +145,11 @@ const UserList: React.FC = () => {
         </h4>
         <SearchAndSort
           searchValue={search}
-          onSearchChange={(e) => {
+          onSearchChange={(e: any) => {
             setSearch(e.target.value);
             setCurrentPage(0); // Reset to first page on search
           }}
+          setSort={setSort}
         />
       </div>
 

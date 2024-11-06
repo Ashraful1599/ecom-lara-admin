@@ -1,12 +1,24 @@
 import React from "react";
 import { useDropzone } from "react-dropzone";
+import Image from "next/image";
+
+// interface ImageUploadSectionProps {
+//   onDropFeaturedImage?: (
+//     acceptedFiles: File[],
+//   ) => ((acceptedFiles: File[]) => void) | undefined;
+//   onDropGalleryImages?: (acceptedFiles: File[]) => void;
+//   featuredImage: File | string | null;
+//   galleryImages: (File | string)[];
+//   onRemoveImage?: (image: string) => void | null;
+//   removedImages?: string[] | null;
+// }
 
 interface ImageUploadSectionProps {
-  onDropFeaturedImage: (acceptedFiles: File[]) => void;
-  onDropGalleryImages: (acceptedFiles: File[]) => void;
+  onDropFeaturedImage?: (acceptedFiles: File[]) => void; // Corrected type
+  onDropGalleryImages?: (acceptedFiles: File[]) => void;
   featuredImage: File | string | null;
   galleryImages: (File | string)[];
-  onRemoveImage: (image: string) => void | null;
+  onRemoveImage?: (image: string) => void | null;
   removedImages?: string[] | null;
 }
 
@@ -50,13 +62,17 @@ const ImageUploadSection: React.FC<ImageUploadSectionProps> = ({
           <input {...getInputPropsFeatured()} />
           {featuredImage ? (
             typeof featuredImage === "string" ? (
-              <img
+              <Image
                 src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${featuredImage}`}
+                width="80"
+                height="80"
                 alt="Featured"
                 className="mt-2 h-24 w-24 object-cover"
               />
             ) : (
-              <img
+              <Image
+                width="80"
+                height="80"
                 src={URL.createObjectURL(featuredImage)}
                 alt="Featured"
                 className="mt-2 h-24 w-24 object-cover"
@@ -64,7 +80,7 @@ const ImageUploadSection: React.FC<ImageUploadSectionProps> = ({
             )
           ) : (
             <p className="text-center text-gray-500">
-              Drag 'n' drop a featured image, or click to select one
+              Drag or drop a featured image, or click to select one
             </p>
           )}
         </div>
@@ -84,26 +100,31 @@ const ImageUploadSection: React.FC<ImageUploadSectionProps> = ({
             {galleryImages.length > 0 ? (
               galleryImages.map((image, index) => (
                 <div key={index} className="relative h-16 w-16">
-                  <img
+                  <Image
+                    width="50"
+                    height={"50"}
                     src={
                       typeof image === "string"
                         ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${image}`
                         : URL.createObjectURL(image)
                     }
                     alt={`Gallery ${index}`}
-                    className={`h-full w-full rounded object-cover ${
-                      removedImages.includes(image as string)
-                        ? "opacity-50"
-                        : ""
-                    }`}
+                    // className={`h-full w-full rounded object-cover ${
+                    //   removedImages.includes(image as string)
+                    //     ? "opacity-50"
+                    //     : ""
+                    // }`}
+                    className={`h-full w-full rounded object-cover`}
                   />
                   <button
                     type="button" // Prevents form submission
                     onClick={(e) => {
                       e.stopPropagation(); // Prevents triggering file select
-                      onRemoveImage(image as string);
+                      if (onRemoveImage) {
+                        onRemoveImage(image as string);
+                      }
                     }}
-                    className="absolute right-0 top-0 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
+                    className="remove_img absolute right-0 top-0 rounded-full bg-red-500 p-1 text-white hover:bg-red-600"
                   >
                     ✕
                   </button>
@@ -111,7 +132,7 @@ const ImageUploadSection: React.FC<ImageUploadSectionProps> = ({
               ))
             ) : (
               <p className="w-full text-center text-gray-500">
-                Drag 'n' drop gallery images, or click to select
+                Drag or drop gallery images, or click to select
               </p>
             )}
           </div>

@@ -33,6 +33,12 @@ const EditAttributePage: React.FC = () => {
     }
   }, [attributeId]);
 
+  // Convert attributeId to a number safely
+  const numericAttributeId =
+    typeof attributeId === "string" && !isNaN(Number(attributeId))
+      ? Number(attributeId)
+      : 0; // Handle the case where attributeId is not a valid number
+
   return (
     <DefaultLayout>
       <div>
@@ -40,11 +46,12 @@ const EditAttributePage: React.FC = () => {
         {loading ? (
           <Loader />
         ) : (
-          <UpdateAttributeForm
-            key={attributeId}
-            attributeId={attributeId}
-            initialData={attributeData}
-          />
+          attributeData && (
+            <UpdateAttributeForm
+              attributeId={numericAttributeId}
+              initialData={attributeData}
+            />
+          )
         )}
       </div>
     </DefaultLayout>

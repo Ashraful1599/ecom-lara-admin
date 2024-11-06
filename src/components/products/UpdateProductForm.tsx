@@ -11,17 +11,45 @@ import { handleDataUpload } from "@/utils/handleDataUpload";
 import UpdateProductSidebar from "@/components/products/UpdateProductSidebar";
 import axios from "axios";
 
-const UpdateProductForm = ({ productId, initialData }) => {
+interface UpdateProductFormProps {
+  productId: number; // Assuming productId is a number; adjust as needed
+  initialData: any; // You can create a more specific type if you know the structure
+}
+
+interface Image {
+  image_path: string;
+  is_featured: number;
+}
+
+interface Category {
+  name: string;
+  id: number;
+  slug: string;
+}
+interface Tag {
+  name: string;
+  id: number;
+  slug: string;
+}
+interface Attr {
+  name: string;
+  id: number;
+}
+
+const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
+  productId,
+  initialData,
+}) => {
   const methods = useForm();
   const { handleSubmit, setValue, reset } = methods;
   const [featuredImage, setFeaturedImage] = useState<File | string | null>(
-    initialData?.images.find((img) => img.is_featured === 1)?.image_path ||
-      null,
+    initialData?.images.find((img: Image) => img.is_featured === 1)
+      ?.image_path || null,
   );
   const [galleryImages, setGalleryImages] = useState<(File | string)[]>(
     initialData?.images
-      .filter((img) => img.is_featured === 0)
-      .map((img) => img.image_path) || [],
+      .filter((img: Image) => img.is_featured === 0)
+      .map((img: Image) => img.image_path) || [],
   );
   const [removedImages, setRemovedImages] = useState<string[]>([]);
   const [generatedVariants, setGeneratedVariants] = useState<any[]>(
@@ -30,33 +58,35 @@ const UpdateProductForm = ({ productId, initialData }) => {
 
   // Fetch categories, tags, and attributes for the update form
   const { categories, tags, attributes, fetchInitialData } = useProductData();
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchInitialData();
   }, []);
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     // console.log(initialData);
     if (initialData) {
-      const categoryOptions = initialData.categories.map((category) => ({
-        value: category.id,
-        label: category.name,
-      }));
+      const categoryOptions = initialData.categories.map(
+        (category: Category) => ({
+          value: category.id,
+          label: category.name,
+        }),
+      );
 
-      const tagOptions = initialData.tags.map((tag) => ({
+      const tagOptions = initialData.tags.map((tag: Tag) => ({
         value: tag.id,
         label: tag.name,
       }));
 
-      const getAttributeName = (attrId) => {
-        const attribute = attributes.find((attr) => attr.id === attrId);
+      const getAttributeName = (attrId: number) => {
+        const attribute = attributes.find((attr: Attr) => attr.id === attrId);
         return attribute ? attribute.name : undefined;
       };
 
-      const createAttributeData = (initialData) => {
-        const result = {};
-        initialData.variants.forEach((variant) => {
-          variant.attributes.forEach((attr) => {
+      const createAttributeData = (initialData: any) => {
+        const result: Record<string, Set<any>> = {}; // Use a specific type if known
+        initialData.variants.forEach((variant: any) => {
+          variant.attributes.forEach((attr: any) => {
             const attributeName = getAttributeName(attr.attribute_id);
             if (attributeName) {
               if (!result[attributeName]) {
@@ -75,9 +105,9 @@ const UpdateProductForm = ({ productId, initialData }) => {
 
       const transformedData = createAttributeData(initialData);
 
-      const transformInitialVariantData = (data) => {
+      const transformInitialVariantData = (data: any) => {
         console.log("data inside transform", data);
-        return data.map((singleVariant) => ({
+        return data.map((singleVariant: any) => ({
           ...singleVariant,
           salePrice: singleVariant.sale_price, // Map sale_price to salePrice
         }));
@@ -87,12 +117,13 @@ const UpdateProductForm = ({ productId, initialData }) => {
         initialData.variants,
       );
 
-      console.log(
-        "transformedInitialVariantData",
-        transformedInitialVariantData,
-      );
+      // console.log(
+      //   "transformedInitialVariantData",
+      //   transformedInitialVariantData,
+      // );
 
       reset({
+        id: initialData.id,
         name: initialData.name,
         slug: initialData.slug,
         price: initialData.price,
@@ -133,14 +164,13 @@ const UpdateProductForm = ({ productId, initialData }) => {
 
   const onSubmit = async (data: any) => {
     const formData = handleDataUpload(data, {
-      featuredImage,
-      galleryImages,
+      featuredImage: typeof featuredImage === "string" ? null : featuredImage,
+      galleryImages: galleryImages.filter(
+        (img): img is File => img instanceof File,
+      ),
       removedImages,
     });
     // Log each form data entry for debugging
-    for (const pair of formData.entries()) {
-      console.log(pair[0], pair[1]);
-    }
     try {
       toast.promise(
         axiosInstance
@@ -167,7 +197,7 @@ const UpdateProductForm = ({ productId, initialData }) => {
       toast.error(errorMessage);
     }
   };
-  console.log("generatedVariants", generatedVariants);
+  // console.log("generatedVariants", generatedVariants);
 
   return (
     <FormProvider {...methods}>

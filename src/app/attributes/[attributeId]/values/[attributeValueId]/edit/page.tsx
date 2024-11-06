@@ -43,9 +43,8 @@ const EditAttributeValuePage: React.FC = () => {
           <Loader />
         ) : (
           <UpdateAttributeValueForm
-            key={attributeValueId}
-            attributeId={attributeId}
-            valueId={attributeValueId}
+            attributeId={Number(attributeId)}
+            valueId={Number(attributeValueId)}
             initialData={valueData}
           />
         )}
